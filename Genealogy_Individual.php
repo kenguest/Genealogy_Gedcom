@@ -91,11 +91,12 @@ class Genealogy_Individual
      * @var    array
      * @access public
      */
-    var $Birth = array('Date'   => '',
-                       'Place'  => '',
-                       'Source' => '',
-                       'Note'   => ''
-                       );
+    var $Birth = [
+        'Date'   => '',
+        'Place'  => '',
+        'Source' => '',
+        'Note'   => ''
+    ];
 
     /**
      * Death
@@ -103,11 +104,12 @@ class Genealogy_Individual
      * @var    array
      * @access public
      */
-    var $Death = array('Date'   => '',
-                       'Place'  => '',
-                       'Source' => '',
-                       'Note'   => ''
-                       );
+    var $Death = [
+        'Date'   => '',
+        'Place'  => '',
+        'Source' => '',
+        'Note'   => ''
+    ];
 
     /**
      * First communion
@@ -115,11 +117,12 @@ class Genealogy_Individual
      * @var    array
      * @access public
      */
-    var $FirstCommunion = array('Date'   => '',
-                                'Place'  => '',
-                                'Source' => '',
-                                'Note'   => ''
-                                );
+    var $FirstCommunion = [
+        'Date'   => '',
+        'Place'  => '',
+        'Source' => '',
+        'Note'   => ''
+    ];
 
     /**
      * Sex
@@ -135,7 +138,7 @@ class Genealogy_Individual
      * @var    string
      * @access public
      */
-    var $Occupation = array();
+    var $Occupation = [];
 
     /**
      * Source
@@ -159,7 +162,7 @@ class Genealogy_Individual
      * @var    string
      * @access public
      */
-    var $FamilySpouse = array();
+    var $FamilySpouse = [];
 
     /**
      * Family child
@@ -183,9 +186,7 @@ class Genealogy_Individual
      * @var    array
      * @access public
      */
-    var $Burial = array('Date'   => '',
-                        'Place'  => ''
-                        );
+    var $Burial = ['Date'   => '', 'Place'  => ''];
 
     /**
      * Note
@@ -205,7 +206,7 @@ class Genealogy_Individual
      * @access public
      * @return object Genealogy_Individual
      */
-    function Genealogy_Individual($arg)
+    function __construct($arg)
     {
         $this->Identifier               = $arg[0];
         $this->Lastname                 = $arg[1];

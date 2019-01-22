@@ -51,9 +51,7 @@ class Genealogy_Header
      * @var    array
      * @access public
      */
-    var $Gedcom = array('Version' => '',
-                        'Format'  => ''
-                        );
+    var $Gedcom = ['Version' => '', 'Format'  => ''];
 
     /**
      * Contains File
@@ -109,11 +107,12 @@ class Genealogy_Header
      * @var    array
      * @access public
      */
-    var $Submitter = array('Name'    => '',
-                           'Note'    => '',
-                           'Address' => '',
-                           'Phone'   => ''
-                           );
+    var $Submitter = [
+        'Name'    => '',
+        'Note'    => '',
+        'Address' => '',
+        'Phone'   => ''
+    ];
 
     /**
      * Contains the source information
@@ -121,18 +120,26 @@ class Genealogy_Header
      * @var    array
      * @access public
      */
-    var $Source = array('Name'      => '',
+    var $Source = [
+        'Name'      => '',
+        'Version'   => '',
+        'Corporate' => '',
+        'Address'   => '',
+        'Country'   => '',
+        'Phone'     => '',
+        'Data'      => ''
+    ];
+
+    /**
+     * Constructor
+     *
                         'Version'   => '',
                         'Corporate' => '',
                         'Address'   => '',
                         'Country'   => '',
                         'Phone'     => '',
                         'Data'      => ''
-                        );
-
-    /**
-     * Constructor
-     *
+                        ];
      * Creates a new Genealogy_Header Object
      *
      * @param array $arg Array of arguments
@@ -141,19 +148,17 @@ class Genealogy_Header
      *
      * @return object Genealogy_Header
      */
-    function Genealogy_Header($arg)
+    function __construct($arg)
     {
+        $address = $arg[7] . ' ' . $arg[8] . ' ' . $arg[9];
+        $address .= ' ' . $arg[10] . ' ' . $arg[11];
         $this->Gedcom['Version']    = $arg[0];
         $this->Gedcom['Format']     = $arg[1];
-        $this->Date                 = $arg[2].' '.$arg[3];
+        $this->Date                 = $arg[2] . ' ' . $arg[3];
         $this->Source['Name']       = $arg[4];
         $this->Source['Version']    = $arg[5];
         $this->Source['Corporate']  = $arg[6];
-        $this->Source['Address']    = $arg[7].' '.
-                                      $arg[8].' '.
-                                      $arg[9].' '.
-                                      $arg[10].' '.
-                                      $arg[11];
+        $this->Source['Address']    = $address;
         $this->Source['Country']    = $arg[12];
         $this->Source['Phone']      = $arg[13];
         $this->Source['Data']       = $arg[14];

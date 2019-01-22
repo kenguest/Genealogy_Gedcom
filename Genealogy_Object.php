@@ -72,7 +72,7 @@ class Genealogy_Object
      *
      * @return object Genealogy_Object
      */
-    function Genealogy_Object($arg)
+    function __construct($arg)
     {
         $this->Identifier = $arg[0];
         $this->File       = $arg[1];

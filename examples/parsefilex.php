@@ -4,13 +4,13 @@ error_reporting(E_ALL);
 // for windows users
 //ini_set('include_path', '.;'.$_SERVER['DOCUMENT_ROOT'].'/pear');
 
-require_once 'Benchmark/Timer.php';
+//require_once 'Benchmark/Timer.php';
 require_once 'Genealogy/Gedcom.php';
 
 //$timer =& new Benchmark_Timer();
 //$timer->setMarker('Start');
 $file = $_SERVER['argv'][1];
-$ged =& new Genealogy_Gedcom($file);
+$ged = new Genealogy_Gedcom($file);
 //$timer->stop();
 //$timer->display();
 

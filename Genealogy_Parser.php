@@ -68,7 +68,7 @@ class Genealogy_Parser
      * @var    array
      * @access private
      */
-    var $_FileContent = array();
+    var $_FileContent = [];
 
     /**
      * Contains the all tree of the file contain
@@ -76,7 +76,7 @@ class Genealogy_Parser
      * @var    array
      * @access private
      */
-    var $_GedcomTree = array();
+    var $_GedcomTree = [];
 
     /**
      * Contains the header tree
@@ -84,7 +84,7 @@ class Genealogy_Parser
      * @var    array
      * @access private
      */
-    var $_GedcomHeaderTree = array();
+    var $_GedcomHeaderTree = [];
 
     /**
      * Contains the individuals tree
@@ -92,7 +92,7 @@ class Genealogy_Parser
      * @var    array
      * @access private
      */
-    var $_GedcomIndividualsTree = array();
+    var $_GedcomIndividualsTree = [];
 
     /**
      * Contains the families tree
@@ -100,7 +100,7 @@ class Genealogy_Parser
      * @var    array
      * @access private
      */
-    var $_GedcomFamiliesTree = array();
+    var $_GedcomFamiliesTree = [];
 
     /**
      * Contains the objects tree
@@ -108,7 +108,7 @@ class Genealogy_Parser
      * @var    array
      * @access private
      */
-    var $_GedcomObjectsTree = array();
+    var $_GedcomObjectsTree = [];
 
     /**
      * Contains an array of Genealogy_Individual object
@@ -116,7 +116,7 @@ class Genealogy_Parser
      * @var    array
      * @access public
      */
-    var $GedcomIndividualsTreeObjects = array();
+    var $GedcomIndividualsTreeObjects = [];
 
     /**
      * Contains an array of Genealogy_Family object
@@ -124,7 +124,7 @@ class Genealogy_Parser
      * @var    array
      * @access public
      */
-    var $GedcomFamiliesTreeObjects = array();
+    var $GedcomFamiliesTreeObjects = [];
 
     /**
      * Contains an array of Genealogy_Object object
@@ -132,7 +132,7 @@ class Genealogy_Parser
      * @var    array
      * @access public
      */
-    var $GedcomObjectsTreeObjects = array();
+    var $GedcomObjectsTreeObjects = [];
 
     /**
      * Contains a Genealogy_Header object
@@ -140,7 +140,7 @@ class Genealogy_Parser
      * @var    array
      * @access public
      */
-    var $GedcomHeaderTreeObject = array();
+    var $GedcomHeaderTreeObject = [];
 
     /**
      * Display error
@@ -153,9 +153,11 @@ class Genealogy_Parser
     function _raiseError($msg)
     {
         include_once 'PEAR.php';
-        PEAR::raiseError('<b>Genealogy_Parser Error : </b>'.$msg,
+        PEAR::raiseError(
+            '<b>Genealogy_Parser Error : </b>'.$msg,
             null,
-            PEAR_ERROR_DIE);
+            PEAR_ERROR_DIE
+        );
     }
 
     /**
@@ -180,8 +182,10 @@ class Genealogy_Parser
             unset($this->_GedcomTree);
             unset($this->_GedcomHeaderTree);
         } else {
-            Genealogy_Parser::_raiseError($this->_GedcomFile.
-                                          ' is not a valid Gedcom file.');
+            Genealogy_Parser::_raiseError(
+                $this->_GedcomFile.
+                ' is not a valid Gedcom file.'
+            );
         }
     }
 
@@ -193,7 +197,7 @@ class Genealogy_Parser
      */
     function _getFileContent()
     {
-        $buffer = array();
+        $buffer = [];
         if ($fp = @fopen($this->_GedcomFile, 'r')) {
             while (!feof($fp)) {
                 $buffer[] = trim(fgets($fp, 1024));
@@ -241,7 +245,7 @@ class Genealogy_Parser
             if (!empty($element)) {
                 if ($element{0} == '0') {
                     $i++;
-                    $this->_GedcomTree[$i] = array();
+                    $this->_GedcomTree[$i] = [];
                 }
                 $this->_GedcomTree[$i][] = $element;
             }
@@ -285,80 +289,149 @@ class Genealogy_Parser
     {
         $this->_GedcomHeaderTree = $this->_GedcomTree[0];
 
-        $Header_Param = array(@preg_replace('/\d VERS (.*)/US',
+        $Header_Param = [@preg_replace(
+            '/\d VERS (.*)/US',
+            '$1', $this->_GedcomHeaderTree[$this->_subTag(
+                $this->_GedcomHeaderTree, 'GEDC', 'VERS'
+            )]
+        ),
+                @preg_replace(
+                    '/\d FORM (.*)/US',
                     '$1', $this->_GedcomHeaderTree[$this->_subTag(
-                        $this->_GedcomHeaderTree, 'GEDC', 'VERS')]),
-                @preg_replace('/\d FORM (.*)/US',
-                    '$1', $this->_GedcomHeaderTree[$this->_subTag(
-                        $this->_GedcomHeaderTree, 'GEDC', 'FORM')]),
-                @preg_replace('/\d DATE (.*)/US',
+                        $this->_GedcomHeaderTree, 'GEDC', 'FORM'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d DATE (.*)/US',
                     '$1', $this->_GedcomHeaderTree[$this->_tag(
-                        $this->_GedcomHeaderTree, 'DATE')]),
-                @preg_replace('/\d TIME (.*)/US',
+                        $this->_GedcomHeaderTree, 'DATE'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d TIME (.*)/US',
                     '$1', $this->_GedcomHeaderTree[$this->_subTag(
-                        $this->_GedcomHeaderTree, 'DATE', 'TIME')]),
-                @preg_replace('/\d NAME (.*)/US',
+                        $this->_GedcomHeaderTree, 'DATE', 'TIME'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d NAME (.*)/US',
                     '$1', $this->_GedcomHeaderTree[$this->_subTag(
-                        $this->_GedcomHeaderTree, 'SOUR', 'NAME')]),
-                @preg_replace('/\d VERS (.*)/US',
+                        $this->_GedcomHeaderTree, 'SOUR', 'NAME'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d VERS (.*)/US',
                     '$1', $this->_GedcomHeaderTree[$this->_subTag(
-                        $this->_GedcomHeaderTree, 'SOUR', 'VERS')]),
-                @preg_replace('/\d CORP (.*)/US',
+                        $this->_GedcomHeaderTree, 'SOUR', 'VERS'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d CORP (.*)/US',
                     '$1', $this->_GedcomHeaderTree[$this->_subTag(
-                        $this->_GedcomHeaderTree, 'SOUR', 'CORP')]),
-                @preg_replace('/\d ADDR (.*)/US',
-                        '$1', $this->_GedcomHeaderTree[$this->_subTag(
-                            $this->_GedcomHeaderTree, 'SOUR', 'ADDR')]),
-                @preg_replace('/\d ADR1 (.*)/US',
-                        '$1', $this->_GedcomHeaderTree[$this->_subTag(
-                            $this->_GedcomHeaderTree, 'SOUR', 'ADR1')]),
-                @preg_replace('/\d ADR2 (.*)/US',
-                        '$1', $this->_GedcomHeaderTree[$this->_subTag(
-                            $this->_GedcomHeaderTree, 'SOUR', 'ADR2')]),
-                @preg_replace('/\d CITY (.*)/US',
-                        '$1', $this->_GedcomHeaderTree[$this->_subTag(
-                            $this->_GedcomHeaderTree, 'SOUR', 'CITY')]),
-                @preg_replace('/\d POST (.*)/US',
-                        '$1', $this->_GedcomHeaderTree[$this->_subTag(
-                            $this->_GedcomHeaderTree, 'SOUR', 'POST')]),
-                @preg_replace('/\d CTRY (.*)/US',
-                        '$1', $this->_GedcomHeaderTree[$this->_subTag(
-                            $this->_GedcomHeaderTree, 'SOUR', 'CTRY')]),
-                @preg_replace('/\d PHON (.*)/US',
-                        '$1', $this->_GedcomHeaderTree[$this->_subTag(
-                            $this->_GedcomHeaderTree, 'SOUR', 'PHON')]),
-                @preg_replace('/\d DATA (.*)/US',
-                        '$1', $this->_GedcomHeaderTree[$this->_subTag(
-                            $this->_GedcomHeaderTree, 'SOUR', 'DATA')]),
-                @preg_replace('/\d OBJE @(O\d*)@/US',
-                        '$1', $this->_GedcomHeaderTree[$this->_tag(
-                            $this->_GedcomHeaderTree, 'OBJE')]),
-                @preg_replace('/\d LANG (.*)/US',
-                        '$1', $this->_GedcomHeaderTree[$this->_tag(
-                            $this->_GedcomHeaderTree, 'LANG')]),
-                @preg_replace('/\d CHAR (.*)/US',
-                        '$1', $this->_GedcomHeaderTree[$this->_tag(
-                            $this->_GedcomHeaderTree, 'CHAR')]),
-                @preg_replace('/\d COPR (.*)/US',
-                        '$1', $this->_GedcomHeaderTree[$this->_tag(
-                            $this->_GedcomHeaderTree, 'COPR')]),
-                @preg_replace('/\d FILE (.*)/US',
-                        '$1', $this->_GedcomHeaderTree[$this->_tag(
-                            $this->_GedcomHeaderTree, 'FILE')]),
-                @preg_replace('/\d NAME (.*)/US',
-                        '$1', $this->_GedcomTree[1][$this->_subTag(
-                            $this->_GedcomTree[1], 'SUBM', 'NAME')]),
-                @preg_replace('/\d NOTE (.*)/US',
-                        '$1', $this->_GedcomTree[1][$this->_subTag(
-                            $this->_GedcomTree[1], 'SUBM', 'NOTE')]),
+                        $this->_GedcomHeaderTree, 'SOUR', 'CORP'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d ADDR (.*)/US',
+                    '$1', $this->_GedcomHeaderTree[$this->_subTag(
+                        $this->_GedcomHeaderTree, 'SOUR', 'ADDR'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d ADR1 (.*)/US',
+                    '$1', $this->_GedcomHeaderTree[$this->_subTag(
+                        $this->_GedcomHeaderTree, 'SOUR', 'ADR1'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d ADR2 (.*)/US',
+                    '$1', $this->_GedcomHeaderTree[$this->_subTag(
+                        $this->_GedcomHeaderTree, 'SOUR', 'ADR2'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d CITY (.*)/US',
+                    '$1', $this->_GedcomHeaderTree[$this->_subTag(
+                        $this->_GedcomHeaderTree, 'SOUR', 'CITY'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d POST (.*)/US',
+                    '$1', $this->_GedcomHeaderTree[$this->_subTag(
+                        $this->_GedcomHeaderTree, 'SOUR', 'POST'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d CTRY (.*)/US',
+                    '$1', $this->_GedcomHeaderTree[$this->_subTag(
+                        $this->_GedcomHeaderTree, 'SOUR', 'CTRY'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d PHON (.*)/US',
+                    '$1', $this->_GedcomHeaderTree[$this->_subTag(
+                        $this->_GedcomHeaderTree, 'SOUR', 'PHON'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d DATA (.*)/US',
+                    '$1', $this->_GedcomHeaderTree[$this->_subTag(
+                        $this->_GedcomHeaderTree, 'SOUR', 'DATA'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d OBJE @(O\d*)@/US',
+                    '$1', $this->_GedcomHeaderTree[$this->_tag(
+                        $this->_GedcomHeaderTree, 'OBJE'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d LANG (.*)/US',
+                    '$1', $this->_GedcomHeaderTree[$this->_tag(
+                        $this->_GedcomHeaderTree, 'LANG'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d CHAR (.*)/US',
+                    '$1', $this->_GedcomHeaderTree[$this->_tag(
+                        $this->_GedcomHeaderTree, 'CHAR'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d COPR (.*)/US',
+                    '$1', $this->_GedcomHeaderTree[$this->_tag(
+                        $this->_GedcomHeaderTree, 'COPR'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d FILE (.*)/US',
+                    '$1', $this->_GedcomHeaderTree[$this->_tag(
+                        $this->_GedcomHeaderTree, 'FILE'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d NAME (.*)/US',
+                    '$1', $this->_GedcomTree[1][$this->_subTag(
+                        $this->_GedcomTree[1], 'SUBM', 'NAME'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d NOTE (.*)/US',
+                    '$1', $this->_GedcomTree[1][$this->_subTag(
+                        $this->_GedcomTree[1], 'SUBM', 'NOTE'
+                    )]
+                ),
                 $this->_contTag($this->_GedcomTree[1], 'ADDR'),
-                @preg_replace('/\d PHON (.*)/US',
-                        '$1',
-                        $this->_GedcomTree[1][$this->_subTag(
-                            $this->_GedcomTree[1], 'SUBM', 'PHON')])
-                    );
+                @preg_replace(
+                    '/\d PHON (.*)/US',
+                    '$1',
+                    $this->_GedcomTree[1][$this->_subTag(
+                        $this->_GedcomTree[1], 'SUBM', 'PHON'
+                    )]
+                )
+                    ];
 
-        $this->GedcomHeaderTreeObject =& new Genealogy_Header($Header_Param);
+        $this->GedcomHeaderTreeObject = new Genealogy_Header($Header_Param);
 
         unset($Header_Param);
     }
@@ -374,101 +447,176 @@ class Genealogy_Parser
     function _parseIndividuals()
     {
         for ($i = 0; $i < count($this->_GedcomIndividualsTree); $i++) {
-            $Genealogy_Individual_Param = array(
-                    @preg_replace('/0 @(I\d*)@ INDI/US',
-                        '$1', $this->_GedcomIndividualsTree[$i][0]),
-                    @preg_replace('/\d NAME (.*)\/(.*)\//US', '$2',
+            $Genealogy_Individual_Param = [
+                    @preg_replace(
+                        '/0 @(I\d*)@ INDI/US',
+                        '$1', $this->_GedcomIndividualsTree[$i][0]
+                    ),
+                    @preg_replace(
+                        '/\d NAME (.*)\/(.*)\//US', '$2',
                         $this->_GedcomIndividualsTree[$i][$this->_tag(
-                            $this->_GedcomIndividualsTree[$i], 'NAME')]),
-                    @preg_replace('/\d NAME (.*)\/(.*)\//US', '$1',
+                            $this->_GedcomIndividualsTree[$i], 'NAME'
+                        )]
+                    ),
+                    @preg_replace(
+                        '/\d NAME (.*)\/(.*)\//US', '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_tag(
-                            $this->_GedcomIndividualsTree[$i], 'NAME')]),
-                    @preg_replace('/\d NICK (.*)/US', '$1',
+                            $this->_GedcomIndividualsTree[$i], 'NAME'
+                        )]
+                    ),
+                    @preg_replace(
+                        '/\d NICK (.*)/US', '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_tag(
-                            $this->_GedcomIndividualsTree[$i], 'NICK')]),
-                    @preg_replace('/\d TITL (.*)/US', '$1',
+                            $this->_GedcomIndividualsTree[$i], 'NICK'
+                        )]
+                    ),
+                    @preg_replace(
+                        '/\d TITL (.*)/US', '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_tag(
-                            $this->_GedcomIndividualsTree[$i], 'TITL')]),
-                    @preg_replace('/\d DATE (.*)/US', '$1',
+                            $this->_GedcomIndividualsTree[$i], 'TITL'
+                        )]
+                    ),
+                    @preg_replace(
+                        '/\d DATE (.*)/US', '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_subTag(
-                            $this->_GedcomIndividualsTree[$i], 'BIRT', 'DATE')]),
-                    @preg_replace('/\d PLAC (.*)/US', '$1',
+                            $this->_GedcomIndividualsTree[$i], 'BIRT', 'DATE'
+                        )]
+                    ),
+                    @preg_replace(
+                        '/\d PLAC (.*)/US', '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_subTag(
-                            $this->_GedcomIndividualsTree[$i], 'BIRT', 'PLAC')]),
-                    @preg_replace('/\d SOUR (.*)/US', '$1',
+                            $this->_GedcomIndividualsTree[$i], 'BIRT', 'PLAC'
+                        )]
+                    ),
+                    @preg_replace(
+                        '/\d SOUR (.*)/US', '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_subTag(
-                            $this->_GedcomIndividualsTree[$i], 'BIRT', 'SOUR')]),
-                    @preg_replace('/\d NOTE (.*)/US', '$1',
+                            $this->_GedcomIndividualsTree[$i], 'BIRT', 'SOUR'
+                        )]
+                    ),
+                    @preg_replace(
+                        '/\d NOTE (.*)/US', '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_subTag(
-                            $this->_GedcomIndividualsTree[$i], 'BIRT', 'NOTE')]),
-                    @preg_replace('/\d DATE (.*)/US', '$1',
+                            $this->_GedcomIndividualsTree[$i], 'BIRT', 'NOTE'
+                        )]
+                    ),
+                    @preg_replace(
+                        '/\d DATE (.*)/US', '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_subTag(
-                            $this->_GedcomIndividualsTree[$i], 'DEAT', 'DATE')]),
-                    @preg_replace('/\d PLAC (.*)/US', '$1',
+                            $this->_GedcomIndividualsTree[$i], 'DEAT', 'DATE'
+                        )]
+                    ),
+                    @preg_replace(
+                        '/\d PLAC (.*)/US', '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_subTag(
-                            $this->_GedcomIndividualsTree[$i], 'DEAT', 'PLAC')]),
-                    @preg_replace('/\d SOUR (.*)/US', '$1',
+                            $this->_GedcomIndividualsTree[$i], 'DEAT', 'PLAC'
+                        )]
+                    ),
+                    @preg_replace(
+                        '/\d SOUR (.*)/US', '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_subTag(
-                            $this->_GedcomIndividualsTree[$i], 'DEAT', 'SOUR')]),
-                    @preg_replace('/\d NOTE (.*)/US', '$1',
+                            $this->_GedcomIndividualsTree[$i], 'DEAT', 'SOUR'
+                        )]
+                    ),
+                    @preg_replace(
+                        '/\d NOTE (.*)/US', '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_subTag(
-                            $this->_GedcomIndividualsTree[$i], 'DEAT', 'NOTE')]),
-                    @preg_replace('/\d SEX (\w)/US', '$1',
+                            $this->_GedcomIndividualsTree[$i], 'DEAT', 'NOTE'
+                        )]
+                    ),
+                    @preg_replace(
+                        '/\d SEX (\w)/US', '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_tag(
-                            $this->_GedcomIndividualsTree[$i], 'SEX')]),
+                            $this->_GedcomIndividualsTree[$i], 'SEX'
+                        )]
+                    ),
                     $this->_arrayTag($this->_GedcomIndividualsTree[$i], 'OCCU'),
 
               //      @preg_replace('/\d OCCU (.*)/US',
               //          '$1', $this->_GedcomIndividualsTree[$i][$this->_tag(
               //              $this->_GedcomIndividualsTree[$i], 'OCCU')]),
-                    @preg_replace('/\d SOUR (.*)/US',
+                    @preg_replace(
+                        '/\d SOUR (.*)/US',
                         '$1', $this->_GedcomIndividualsTree[$i][$this->_tag(
-                            $this->_GedcomIndividualsTree[$i], 'SOUR')]),
-                    @preg_replace('/\d OBJE @(O\d*)@/US',
+                            $this->_GedcomIndividualsTree[$i], 'SOUR'
+                        )]
+                    ),
+                    @preg_replace(
+                        '/\d OBJE @(O\d*)@/US',
                         '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_tag(
-                            $this->_GedcomIndividualsTree[$i], 'OBJE')]),
+                            $this->_GedcomIndividualsTree[$i], 'OBJE'
+                        )]
+                    ),
                     $this->_arrayTag($this->_GedcomIndividualsTree[$i], 'FAMS'),
-                    @preg_replace('/\d FAMC @(F\d*)@/US',
+                    @preg_replace(
+                        '/\d FAMC @(F\d*)@/US',
                         '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_tag(
-                            $this->_GedcomIndividualsTree[$i], 'FAMC')]),
-                    @preg_replace('/\d NATI (.*)/US',
+                            $this->_GedcomIndividualsTree[$i], 'FAMC'
+                        )]
+                    ),
+                    @preg_replace(
+                        '/\d NATI (.*)/US',
                         '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_tag(
-                            $this->_GedcomIndividualsTree[$i], 'NATI')]),
-                    @preg_replace('/\d DATE (.*)/US',
+                            $this->_GedcomIndividualsTree[$i], 'NATI'
+                        )]
+                    ),
+                    @preg_replace(
+                        '/\d DATE (.*)/US',
                         '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_subTag(
-                            $this->_GedcomIndividualsTree[$i], 'FCOM', 'DATE')]),
-                    @preg_replace('/\d PLAC (.*)/US',
+                            $this->_GedcomIndividualsTree[$i], 'FCOM', 'DATE'
+                        )]
+                    ),
+                    @preg_replace(
+                        '/\d PLAC (.*)/US',
                         '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_subTag(
-                            $this->_GedcomIndividualsTree[$i], 'FCOM', 'PLAC')]),
-                    @preg_replace('/\d SOUR (.*)/US',
+                            $this->_GedcomIndividualsTree[$i], 'FCOM', 'PLAC'
+                        )]
+                    ),
+                    @preg_replace(
+                        '/\d SOUR (.*)/US',
                         '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_subTag(
-                            $this->_GedcomIndividualsTree[$i], 'FCOM', 'SOUR')]),
-                    @preg_replace('/\d NOTE (.*)/US',
+                            $this->_GedcomIndividualsTree[$i], 'FCOM', 'SOUR'
+                        )]
+                    ),
+                    @preg_replace(
+                        '/\d NOTE (.*)/US',
                         '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_subTag(
-                            $this->_GedcomIndividualsTree[$i], 'FCOM', 'NOTE')]),
-                    @preg_replace('/\d DATE (.*)/US',
+                            $this->_GedcomIndividualsTree[$i], 'FCOM', 'NOTE'
+                        )]
+                    ),
+                    @preg_replace(
+                        '/\d DATE (.*)/US',
                         '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_subTag(
-                            $this->_GedcomIndividualsTree[$i], 'BURI', 'DATE')]),
-                    @preg_replace('/\d PLAC (.*)/US',
+                            $this->_GedcomIndividualsTree[$i], 'BURI', 'DATE'
+                        )]
+                    ),
+                    @preg_replace(
+                        '/\d PLAC (.*)/US',
                         '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_subTag(
-                            $this->_GedcomIndividualsTree[$i], 'BURI', 'PLAC')]),
-                    @preg_replace('/\d NOTE (.*)/US',
+                            $this->_GedcomIndividualsTree[$i], 'BURI', 'PLAC'
+                        )]
+                    ),
+                    @preg_replace(
+                        '/\d NOTE (.*)/US',
                         '$1',
                         $this->_GedcomIndividualsTree[$i][$this->_tag(
-                            $this->_GedcomIndividualsTree[$i], 'NOTE')])
-            );
+                            $this->_GedcomIndividualsTree[$i], 'NOTE'
+                        )]
+                    )
+            ];
 
-            $this->GedcomIndividualsTreeObjects[] =& new Genealogy_Individual(
-                $Genealogy_Individual_Param);
+            $this->GedcomIndividualsTreeObjects[] = new Genealogy_Individual(
+                $Genealogy_Individual_Param
+            );
         }
         unset($Genealogy_Individual_Param);
     }
@@ -484,58 +632,88 @@ class Genealogy_Parser
     function _parseFamilies()
     {
         for ($i = 0; $i < count($this->_GedcomFamiliesTree); $i++) {
-            $Family = array(@preg_replace(
-                    '/0 @(F\d*)@ FAM/US',
-                    '$1',
-                    $this->_GedcomFamiliesTree[$i][0]),
+            $Family = [@preg_replace(
+                '/0 @(F\d*)@ FAM/US',
+                '$1',
+                $this->_GedcomFamiliesTree[$i][0]
+            ),
                 @preg_replace(
                     '/\d HUSB @(I\d*)@/US',
                     '$1',
                     $this->_GedcomFamiliesTree[$i][$this->_tag(
-                        $this->_GedcomFamiliesTree[$i],'HUSB')]),
-                @preg_replace('/\d WIFE @(I\d*)@/US',
+                        $this->_GedcomFamiliesTree[$i], 'HUSB'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d WIFE @(I\d*)@/US',
                     '$1',
                     $this->_GedcomFamiliesTree[$i][$this->_tag(
-                        $this->_GedcomFamiliesTree[$i],'WIFE')]),
-                @preg_replace('/\d NCHI (.*)/US',
+                        $this->_GedcomFamiliesTree[$i], 'WIFE'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d NCHI (.*)/US',
                     '$1',
                     $this->_GedcomFamiliesTree[$i][$this->_tag(
-                        $this->_GedcomFamiliesTree[$i],'NCHI')]),
+                        $this->_GedcomFamiliesTree[$i], 'NCHI'
+                    )]
+                ),
                 $this->_arrayTag($this->_GedcomFamiliesTree[$i], 'CHIL'),
-                @preg_replace('/\d DATE (.*)/US',
+                @preg_replace(
+                    '/\d DATE (.*)/US',
                     '$1',
                     $this->_GedcomFamiliesTree[$i][$this->_subTag(
-                        $this->_GedcomFamiliesTree[$i],'MARR', 'DATE')]),
-                @preg_replace('/\d TIME (.*)/US',
+                        $this->_GedcomFamiliesTree[$i], 'MARR', 'DATE'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d TIME (.*)/US',
                     '$1',
                     $this->_GedcomFamiliesTree[$i][$this->_subTag(
-                        $this->_GedcomFamiliesTree[$i],'MARR', 'TIME')]),
-                @preg_replace('/\d PLAC (.*)/US',
+                        $this->_GedcomFamiliesTree[$i], 'MARR', 'TIME'
+                    )]
+                ),
+                @preg_replace(
+                    '/\d PLAC (.*)/US',
                     '$1',
                     $this->_GedcomFamiliesTree[$i][$this->_subTag(
-                        $this->_GedcomFamiliesTree[$i],'MARR', 'PLAC')]),
+                        $this->_GedcomFamiliesTree[$i], 'MARR', 'PLAC'
+                    )]
+                ),
                 $this->_arrayWitnessTag($this->_GedcomFamiliesTree[$i]),
                 $this->_contTag($this->_GedcomFamiliesTree[$i], 'NOTE'),
-                @preg_replace('/\d SOUR (.*)/US',
+                @preg_replace(
+                    '/\d SOUR (.*)/US',
                     '$1',
                     $this->_GedcomFamiliesTree[$i][$this->_subTag(
-                        $this->_GedcomFamiliesTree[$i],'MARR', 'SOUR')]),
-                array('Identifier'   => @preg_replace('/\d ASSO @(I\d*)@/US',
+                        $this->_GedcomFamiliesTree[$i], 'MARR', 'SOUR'
+                    )]
+                ),
+                ['Identifier'   => @preg_replace(
+                    '/\d ASSO @(I\d*)@/US',
                     '$1',
                     $this->_GedcomFamiliesTree[$i][$this->_tag(
-                    $this->_GedcomFamiliesTree[$i], 'ASSO')]),
-                    'Relationship' => @preg_replace('/\d RELA (.*)/US',
-                      '$1',
-                      $this->_GedcomFamiliesTree[$i][$this->_subTag(
-                          $this->_GedcomFamiliesTree[$i],'ASSO', 'RELA')])
-                    ),
-                @preg_replace('/\d DATE (.*)/US',
+                        $this->_GedcomFamiliesTree[$i], 'ASSO'
+                    )]
+                ),
+                    'Relationship' => @preg_replace(
+                        '/\d RELA (.*)/US',
+                        '$1',
+                        $this->_GedcomFamiliesTree[$i][$this->_subTag(
+                            $this->_GedcomFamiliesTree[$i], 'ASSO', 'RELA'
+                        )]
+                    )
+                    ],
+                @preg_replace(
+                    '/\d DATE (.*)/US',
                     '$1',
                     $this->_GedcomFamiliesTree[$i][$this->_subTag(
-                        $this->_GedcomFamiliesTree[$i],'DIV', 'DATE')])
-            );
+                        $this->_GedcomFamiliesTree[$i], 'DIV', 'DATE'
+                    )]
+                )
+            ];
 
-            $this->GedcomFamiliesTreeObjects[] =& new Genealogy_Family($Family);
+            $this->GedcomFamiliesTreeObjects[] = new Genealogy_Family($Family);
         }
         unset($Family);
     }
@@ -549,13 +727,18 @@ class Genealogy_Parser
      * @return null
      */
     function _parseObjects()
-    { // IMGC -> Parentele
+    {
+        // IMGC -> Parentele
         for ($i = 0; $i < count($this->_GedcomObjectsTree); $i++) {
-            $Object = array(@preg_replace('/0 @(O\d*)@ OBJE/US', '$1',
-            $this->_GedcomObjectsTree[$i][0]),
-            @preg_replace('/\d FILE (.*)/US', '$1',
-            $this->_GedcomObjectsTree[$i][$this->_tag($this->_GedcomObjectsTree[$i],'FILE')]));
-            $this->GedcomObjectsTreeObjects[] =& new Genealogy_Object($Object);
+            $Object = [@preg_replace(
+                '/0 @(O\d*)@ OBJE/US', '$1',
+                $this->_GedcomObjectsTree[$i][0]
+            ),
+            @preg_replace(
+                '/\d FILE (.*)/US', '$1',
+                $this->_GedcomObjectsTree[$i][$this->_tag($this->_GedcomObjectsTree[$i], 'FILE')]
+            )];
+            $this->GedcomObjectsTreeObjects[] = new Genealogy_Object($Object);
         }
         unset($Object);
     }
@@ -626,9 +809,11 @@ class Genealogy_Parser
         do {
             // first line with main tag
             if (@preg_match('/'.$mainTag.'/US', $tab[$i])) {
-                $str .= @preg_replace('/'.$level.' '.$mainTag.' (.*)/US',
-                                      '$1',
-                                      $tab[$i]);
+                $str .= @preg_replace(
+                    '/'.$level.' '.$mainTag.' (.*)/US',
+                    '$1',
+                    $tab[$i]
+                );
                 $i++;
             }
             // continue string with others CONT tag
@@ -655,7 +840,7 @@ class Genealogy_Parser
      */
     function _arrayTag($tab, $tag)
     {
-        $arr = array();
+        $arr = [];
 
         for ($i = 0; $i < count($tab); $i++) {
             if (@preg_match('/'.$tag.'/US', $tab[$i])) {
@@ -675,18 +860,24 @@ class Genealogy_Parser
      */
     function _arrayWitnessTag($tab)
     {
-        $arr = array();
+        $arr = [];
         $k   = 0;
 
         for ($i=$this->_tag($tab, 'WITN'); $i < count($tab); $i++) {
             if (@preg_match('/NAME/US', $tab[$i])) {
-                $arr[$k]['Name'] = trim(@preg_replace('/\d NAME (.*)\/(.*)\//US',
-                            '$1 $2',
-                            $tab[$i]));
+                $arr[$k]['Name'] = trim(
+                    @preg_replace(
+                        '/\d NAME (.*)\/(.*)\//US',
+                        '$1 $2',
+                        $tab[$i]
+                    )
+                );
             } elseif (@preg_match('/TITL/US', $tab[$i])) {
-                $arr[$k]['Title'] = @preg_replace('/\d TITL (.*)/US',
-                        '$1',
-                        $tab[$i]);
+                $arr[$k]['Title'] = @preg_replace(
+                    '/\d TITL (.*)/US',
+                    '$1',
+                    $tab[$i]
+                );
             }
             if (isset($arr[$k]['Name']) && isset($arr[$k]['Title'])) {
                 $k++;

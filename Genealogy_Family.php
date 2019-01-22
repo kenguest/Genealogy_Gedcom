@@ -86,7 +86,7 @@ class Genealogy_Family
      * @var    array
      * @access public
      */
-    var $Child = array();
+    var $Child = [];
 
     /**
      * Marriage
@@ -94,13 +94,14 @@ class Genealogy_Family
      * @var    array
      * @access public
      */
-    var $Marriage = array('Date'    => '',
-                          'Time'    => '',
-                          'Place'   => '',
-                          'Witness' => array(),
-                          'Note'    => '',
-                          'Source'  => ''
-                          );
+    var $Marriage = [
+        'Date'    => '',
+        'Time'    => '',
+        'Place'   => '',
+        'Witness' => [],
+        'Note'    => '',
+        'Source'  => ''
+    ];
 
     /**
      * Divorce
@@ -108,7 +109,7 @@ class Genealogy_Family
      * @var    array
      * @access public
      */
-    var $Divorce = array('Date' => '');
+    var $Divorce = ['Date' => ''];
 
     /**
      * Associates
@@ -116,7 +117,7 @@ class Genealogy_Family
      * @var    array
      * @access public
      */
-    var $Associates = array();
+    var $Associates = [];
 
     /**
      * Constructor
@@ -129,7 +130,7 @@ class Genealogy_Family
      *
      * @return object Genealogy_Family
      */
-    function Genealogy_Family($arg)
+    function __construct($arg)
     {
         $this->Identifier          = $arg[0];
         $this->Husband             = $arg[1];

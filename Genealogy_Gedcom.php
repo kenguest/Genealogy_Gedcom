@@ -86,7 +86,7 @@ class Genealogy_Gedcom extends Genealogy_Parser
      * @access public
      * @return object Genealogy_Gedcom the new Genealogy_Gedcom object
      */
-    function Genealogy_Gedcom($filename)
+    function __construct($filename)
     {
         $this->_GedcomFile = $filename;
         parent::parse();
